@@ -1,0 +1,83 @@
+Notes:
+Long post:
+Concept: esp as a 16 channel digital mixer with remote operation
+existing art: https://faustdoc.grame.fr/tutorials/esp32/
+digital audio source: behringer ultranet personal sound monitoring system. (Basically 2 streams of AES3 8channel pcm samples)
+Inputs:
+16 channels digital audio
+15 v DC power
+Vector of level multipliers from Android app. Bluetooth or wifi.
+Outputs:
+Scaled and summed audio to DAC for headphones.
+Questions:
+It's this technically feasible with just the esp and its vector DSP operations?
+Does the bandwidth require an external DSP?
+7 replies
+
+Mordecai Veldt:mv:  14 days ago
+thread of someone looking to  do recording:
+https://www.diyaudio.com/forums/digital-line-level/261683-suggestions-please-16-channel-24-bit-digital-audio-recorder.html
+
+diyaudio.comdiyaudio.com
+Suggestions please for 16-channel 24-bit digital audio recorder - diyAudio
+Originally Posted by fret I bought a WM8804 eval board too... and it arrived today.... gonna give this a try. Hey fret ... do keep us apprised of your
+
+Mordecai Veldt:mv:  14 days ago
+protocol/physical layer details:
+
+Mordecai Veldt:mv:  14 days ago
+Reproduced here for ease:
+Pin configuration
+Looking at the back panel of the x32 and counting 1-8 (left to right) we have
+1: Ch 1-8
+2: Ch 1-8
+3: Ch 9-16
+4: Vcc
+5: Vcc
+6: Ch 9-16
+7: GND
+8: GND
+Vcc is 15 volts DC (pins chosen are similar to Power over Ethernet standard). This comes from an internal switch-mode PSU and is intended to power the P16-m external monitoring boxes. It's not stated how much current each connector is specified to source (there are six output connectors on the P16-i). The P16-m's can also be powered by an external PSU, and the back panel reads "12v 300mA". So it's probably safe to say that each P16-i output socket could provide around 4 watts. To be on the safe side, I'll not use the PoE power as it's probably not enough for a recording device with a hard drive.
+One other thing to note, is that the P16m requires some power draw on the Vcc pins, to switch on the data outputs. Some experimentation found that 5k6 resistor from Vcc to GND does NOT switch it on; whereas a 2k2 resistor DOES switch it on. So the P16m is looking for approx 7mA current draw to switch on the outputs.
+Each output (1, 2, 3, 6) is fed via half of a 74LVC245 octal buffer transceiver device, used in output-only mode.
+twisted-pair cable is meant to have a characteristic impedance of around 110 ohms. I've terminating output 1-2 via a Magjack (i.e. transformer isolation) into 110 ohms. There I see approx 500mV pk-pk digital waveform. It looks fairly clean and nice.
+(edited)
+
+Mordecai Veldt:mv:  14 days ago
+from https://www.diyaudio.com/forums/digital-line-level/261683-suggestions-please-16-channel-24-bit-digital-audio-recorder-post4056390.html
+
+diyaudio.comdiyaudio.com
+Suggestions please for 16-channel 24-bit digital audio recorder - diyAudio
+Originally Posted by fret I bought a WM8804 eval board too... and it arrived today.... gonna give this a try. Hey fret ... do keep us apprised of your
+
+Mordecai Veldt:mv:  14 days ago
+https://github.com/tuck1s/UltranetReceiver
+
+GitHubGitHub
+GitHub - tuck1s/UltranetReceiver: Simple I2S receiver writing contents to SD card
+Simple I2S receiver writing contents to SD card. Contribute to tuck1s/UltranetReceiver development by creating an account on GitHub. (113 kB)
+https://github.com/tuck1s/UltranetReceiver
+
+
+Mordecai Veldt:mv:  13 days ago
+relevant links for later:
+external headphone DAC:
+https://www.adafruit.com/product/3678?gclid=Cj0KCQjw5oiMBhDtARIsAJi0qk1z60QWRzuW4JR0CXfPW6EXESrmnnBm6VEGCsFhl8OBKYds1-Qe_1EaAm44EALw_wcB
+using builtin DAC is limited to 8 bit sound... not good enough.
+https://www.youtube.com/watch?v=lgDu88Y411o&list=PL5vDt5AALlRfGVUv2x7riDMIOX34udtKD&index=19
+
+adafruit.comadafruit.com
+Adafruit I2S Stereo Decoder - UDA1334A Breakout
+This fully-featured UDA1334A I2S Stereo DAC breakout is a perfect match for any I2S-output audio interface. It&#39;s affordable but sounds great! The NXP UDA1334A is a ...
+PRICE
+$6.95 USD
+STOCK
+IN STOCK
+
+YouTubeYouTube | atomic14
+ESP32 Audio Output Using I2S and built-in Digital to Analogue Converters (DACs) 
+
+
+Mordecai Veldt:mv:  < 1 minute ago
+After looking into it a bit, I don't think that it's worth the effort to try to do this on 1 esp, since there's only 2 i2s interfaces. It could be done with 2 esps, shuffling data between them on SPI, but that introduces some extra latency. Probably not too much latency, but the new approach will have an esp just providing a web interface, and teh processing done by a st chip with 3 i2s interfaces.
+   
