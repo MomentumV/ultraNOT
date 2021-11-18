@@ -1,3 +1,4 @@
 Does the type of magjack matter? https://www.mouser.com/datasheet/2/643/belfs08419_1-2290057.pdf vs https://www.mouser.com/ProductDetail/Bel/SI-52008-F?qs=sGAEpiMZZMtJbfcMcIM8CO2wNKxjwIEevQ5t43TC9t0%3D
-do I need a receiver chip? as used by tuck1s in https://thetucks.com/post/differential-line-receiver-for-behringer-ultranet.html
+Q:do I need a receiver chip? as used by tuck1s in https://thetucks.com/post/differential-line-receiver-for-behringer-ultranet.html
+A: No, the CS8416-CZZ can operate in differential input mode, taking the plus minus right from the magjack.
 https://thetucks.com/post/differential-line-receiver-for-behringer-ultranet.html
