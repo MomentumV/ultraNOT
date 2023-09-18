@@ -1,0 +1,11 @@
+This might be feasible on a pi pico w
+we would need to rely heavily on the PIO to intake the full streams
+probably have one processor dedicated to doing the audio mixing and output via i2s
+one processor dedicated to web interface/setting mixer values.
+
+https://github.com/raspberrypi/pico-examples/blob/master/pio/clocked_input/clocked_input.c
+
+we will likely need both PIOs, one on each of the 8 channel streams
+many DMAs to shove the dataframes into memory, handing off to each other 
+
+get current mix levels from another dma, do math and shove out i2s to audio amplifier board.
