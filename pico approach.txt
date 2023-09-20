@@ -9,3 +9,6 @@ we will likely need both PIOs, one on each of the 8 channel streams
 many DMAs to shove the dataframes into memory, handing off to each other 
 
 get current mix levels from another dma, do math and shove out i2s to audio amplifier board.
+
+
+https://github.com/elehobica/pico_spdif_rx << allready done the hard PIO in work. includes spdif to i2s.
